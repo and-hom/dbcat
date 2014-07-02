@@ -1,7 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    Hello!
+{% extends "layout.html" %}
+{% block content %}
+    <!--Filter-->
+    <form action="/" method="get">
+        <input type="submit" name="filter" value="Filter">
+        <input type="submit" name="reset" value="Reset">
+    </form>
 
-  </body>
-</html>
+    <!--Body-->
+{% endblock %}
