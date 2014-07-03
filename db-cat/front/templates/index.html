@@ -2,18 +2,18 @@
 {% block content %}
 <!--Filter-->
 <div class="row">
-    <div class="cell4">
+    <div class="span4">
         <form action="/" method="get">
             {% for filter in filters %}
             {% include 'filters/'+filter.template()+'.html' %}
             {% endfor %}
 
             <input type="submit" name="filter" value="Filter">
-            <input type="submit" name="reset" value="Reset">
+            <input type="reset" name="reset" value="Reset">
         </form>
     </div>
-    <div class="cell8">
-        
+    <div class="span8">
+
     </div>
 </div>
 
