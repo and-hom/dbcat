@@ -1,0 +1,7 @@
+{% extends "filters/filter_layout.html" %}
+{% block filter_content %}
+<label for="{{filter.id()}}_from">From:</label>
+<input type="text" id="{{filter.id()}}_from" name="{{filter.id()}}_from"/>
+<label for="{{filter.id()}}_to">To:</label>
+<input type="text" id="{{filter.id()}}_to" name="{{filter.id()}}_to"/>
+{% endblock %}
