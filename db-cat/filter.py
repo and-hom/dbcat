@@ -9,6 +9,7 @@ class FilterManager:
 
 
 class Filter(polymodel.PolyModel):
+    code = ndb.StringProperty(indexed=True, required=True)
     name = ndb.StringProperty(indexed=True, required=True)
     description = ndb.TextProperty(indexed=False, required=False)
 
