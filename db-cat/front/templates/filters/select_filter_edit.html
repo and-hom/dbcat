@@ -1,0 +1,15 @@
+{% extends "filters/filter_edit_layout.html" %}
+{% block filter_content %}
+<label>Options</label>
+<table>
+    {% set rows=[0,1,2,3,4] %}
+    {% for i in rows %}
+    <tr>
+        <td><label for="code_{{i}}">Code</label></td>
+        <td><input type="text" id="code_{{i}}" name="code_{{i}}"/></td>
+        <td><label for="name_{{i}}">Name</label></td>
+        <td><input type="text" id="name_{{i}}" name="name_{{i}}"/></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
