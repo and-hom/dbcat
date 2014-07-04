@@ -1,6 +1,9 @@
 {% extends "filters/filter_layout.html" %}
 {% block filter_content %}
 <select id="{{filter.id()}}" name="{{filter.id()}}">
+    {% if filter.required %}
+        <option selected="selected"></option>
+    {% endif %}
     {% for option in filter.options %}
     <option value="{{option}}">{{option}}</option>
     {% endfor %}

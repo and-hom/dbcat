@@ -2,8 +2,9 @@ from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
 import util
 
+
 class FilterManager:
-    def filters(self):
+    def list(self):
         return Filter.query().fetch()
 
 
@@ -15,9 +16,7 @@ class Filter(polymodel.PolyModel):
         return self.key.id()
 
     def template(self):
-         return util.camel_to_underscore(self.__class__.__name__)
-
-
+        return util.camel_to_underscore(self.__class__.__name__)
 
 
 class IntRangeFilter(Filter):
@@ -30,4 +29,5 @@ class BooleanFilter(Filter):
 
 
 class SelectFilter(Filter):
+    required = ndb.BooleanProperty(indexed=False, required=True, default=False)
     options = ndb.StringProperty(indexed=False, repeated=True)

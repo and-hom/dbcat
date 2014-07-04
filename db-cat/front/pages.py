@@ -18,4 +18,4 @@ class MainPage(BasePage):
 
 
     def model(self):
-        return {"filters": self.filter_manager.filters()}
+        return {"filters": self.filter_manager.list()}

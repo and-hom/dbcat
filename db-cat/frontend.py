@@ -34,7 +34,7 @@ def fake_filters():
     bf1.put()
 
 
-fake_filters()
+# fake_filters()
 
 frontend = webapp2.WSGIApplication([
                                        ('/', MainPage),
