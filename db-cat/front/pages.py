@@ -1,3 +1,4 @@
+import logging
 import webapp2
 from db import Db, DbManager
 from filter import FilterManager, Filter
@@ -26,8 +27,15 @@ class MainPage(BasePage):
     def model(self):
         return {
             "filters": self.filter_manager.list(),
-            "search_result": self.db_manager.search(self.request)
+            "search_result": self.db_manager.query(self.criteria())
         }
+
+    def criteria(self):
+        return reduce(self.one_filter_criteria, self.filter_manager.list(), [])
+
+    def one_filter_criteria(self, total_criteria, filter):
+        filter_criteria = filter.criteria(self.request)
+        return total_criteria + filter_criteria if filter_criteria else total_criteria
 
 
 class ChangeRequestPage(BasePage):
@@ -81,7 +89,7 @@ class DbChangeRequestPage(ChangeRequestPage):
     def post(self):
         db = Db()
         db.from_request(self.request)
-        db.filter_matching_map = self.db_filter_opts()
+        db.add_params(self.db_filter_opts())
         self.db_manager.create(db)
         self.redirect('/')
 

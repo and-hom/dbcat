@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
+from db import Db
 import util
 from util import BaseManager
 
@@ -25,7 +26,10 @@ class Filter(polymodel.PolyModel):
         self.description = req.get('desc')
 
     def db_params_from_request(self, req):
-        return {self.code: req.get(self.code)}
+        return {self.code: int(req.get(self.code))}
+
+    def criteria(self, request):
+        return [ndb.GenericProperty(self.code) == request.get(self.code)]
 
 
 class IntRangeFilter(Filter):
@@ -37,8 +41,25 @@ class IntRangeFilter(Filter):
         self.min = int(req.get('min'))
         self.max = int(req.get('max'))
 
+    def parse_int(self, str_val):
+        try:
+            return int(str_val)
+        except:
+            return None
+
+    def criteria(self, request):
+        _from = request.get('%s_from' % self.code)
+        _to = request.get('%s_to' % self.code)
+        return [ndb.GenericProperty(self.code) > _from if _from else None,
+                ndb.GenericProperty(self.code) < _to if _to else None]
+
+
 class BooleanFilter(Filter):
-    pass
+    def criteria(self, request):
+        str_val = request.get(self.code)
+        value = str_val.lower() == 'true' if str_val else False
+        return [ndb.GenericProperty(self.code) == (100 if value else 0)]
+
 
 class SelectFilter(Filter):
     required = ndb.BooleanProperty(indexed=False, required=True, default=False)
@@ -64,12 +85,23 @@ class SelectFilter(Filter):
         self.options = options
 
 
+    def opt_param_name(self, opt):
+        return '%s_%s' % (self.code, opt)
+
     def db_params_from_request(self, req):
         option_correlation_map = {}
         for opt in self.options:
-            param_name = '%s_%s' % (self.code, opt)
-            option_correlation_map[param_name] = req.get(param_name)
+            param_name = self.opt_param_name(opt)
+            option_correlation_map[param_name] = int(req.get(param_name))
         return option_correlation_map
+
+
+    def criteria(self, req):
+        for opt in self.options:
+            param_name = self.opt_param_name(opt)
+            if req.get(param_name):
+                return [ndb.GenericProperty(param_name) > 0]
+        return None
 
 
 class FilterChangeRequest:
