@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name"/>
+
+    <label for="short_description">Short description</label>
+    <input type="text" id="short_description" name="short_description"/>
+
+    <label for="description">Description</label>
+    <input type="text" id="description" name="description"/>
+
+
+    <label for="homepage">Homepage</label>
+    <input type="text" id="homepage" name="homepage"/>
+    {% for filter in filters %}
+    {% include 'filters/'+filter.template()+'_db.html' %}
+    {% endfor %}
+    <input type="submit"/>
+    <input type="reset"/>
+</form>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

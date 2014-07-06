@@ -19,16 +19,16 @@
 
 {% block script %}
 <script>
-$('.filter_add_form').css('display', 'none');
-
-$('#filter-type').css('display', 'block');
-$('#filter-type').prop('selectedIndex', -1);
-$( '#filter-type' ).change(function() {
-    val=$('#filter-type').val()
+$(document).ready(function() {
     $('.filter_add_form').css('display', 'none');
-    $('#'+val+'_form').css('display', 'block');;
+
+    $('#filter-type').css('display', 'block');
+    $('#filter-type').prop('selectedIndex', -1);
+    $( '#filter-type' ).change(function() {
+        val=$('#filter-type').val()
+        $('.filter_add_form').css('display', 'none');
+        $('#'+val+'_form').css('display', 'block');;
+    });
 });
-
-
 </script>
 {% endblock %}

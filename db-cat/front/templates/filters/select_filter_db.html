@@ -1,0 +1,13 @@
+{% extends "filters/filter_db_layout.html" %}
+{% block filter_content %}
+{% for opt_name in filter.options %}
+<label for="{{ filter.code }}_{{ opt_name }}">{{ filter.options[opt_name] }}</label>
+<input type="range"
+       id="{{ filter.code }}_{{ opt_name }}"
+       name="{{ filter.code }}_{{ opt_name }}"
+       min="0"
+       max="100"
+       step="1"
+       value="50"/>
+{% endfor %}
+{% endblock %}

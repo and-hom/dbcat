@@ -1,22 +1,20 @@
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
 import util
+from util import BaseManager
 
 MAX_SELECT_OPTS = 1000
 
 
-class FilterManager:
-    def list(self):
-        return Filter.query().fetch()
+class FilterManager(BaseManager):
+    def __init__(self):
+        BaseManager.__init__(self, Filter)
 
 
 class Filter(polymodel.PolyModel):
     code = ndb.StringProperty(indexed=True, required=True)
     name = ndb.StringProperty(indexed=True, required=True)
     description = ndb.TextProperty(indexed=False, required=False)
-
-    def id(self):
-        return self.key.id()
 
     def template(self):
         return util.camel_to_underscore(self.__class__.__name__)
@@ -25,6 +23,9 @@ class Filter(polymodel.PolyModel):
         self.name = req.get('name')
         self.code = req.get('code')
         self.description = req.get('desc')
+
+    def db_params_from_request(self, req):
+        return {self.code: req.get(self.code)}
 
 
 class IntRangeFilter(Filter):
@@ -36,10 +37,8 @@ class IntRangeFilter(Filter):
         self.min = int(req.get('min'))
         self.max = int(req.get('max'))
 
-
 class BooleanFilter(Filter):
     pass
-
 
 class SelectFilter(Filter):
     required = ndb.BooleanProperty(indexed=False, required=True, default=False)
@@ -63,6 +62,14 @@ class SelectFilter(Filter):
         self.required = (req.get('required') == 'true')
         options = self.options_from_request(req)
         self.options = options
+
+
+    def db_params_from_request(self, req):
+        option_correlation_map = {}
+        for opt in self.options:
+            param_name = '%s_%s' % (self.code, opt)
+            option_correlation_map[param_name] = req.get(param_name)
+        return option_correlation_map
 
 
 class FilterChangeRequest:

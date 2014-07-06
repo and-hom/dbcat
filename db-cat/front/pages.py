@@ -1,10 +1,13 @@
 import webapp2
+from db import Db, DbManager
 from filter import FilterManager, Filter
 import frontend
 from util import camel_to_underscore, underscore_to_camel
 
 
 class BasePage(webapp2.RequestHandler):
+    filter_manager = FilterManager()
+    db_manager = DbManager()
 
     def get(self):
         template_values = self.model()
@@ -20,11 +23,11 @@ class BasePage(webapp2.RequestHandler):
 
 
 class MainPage(BasePage):
-    filter_manager = FilterManager()
-
-
     def model(self):
-        return {"filters": self.filter_manager.list()}
+        return {
+            "filters": self.filter_manager.list(),
+            "search_result": self.db_manager.search(self.request)
+        }
 
 
 class ChangeRequestPage(BasePage):
@@ -37,13 +40,13 @@ class FilterChangeRequestPage(ChangeRequestPage):
 
     def model(self):
         return {
-            "filter_types":self.filter_types()
+            "filter_types": self.filter_types()
         }
 
     def filter_types(self):
-        return map(self.class_to_name,Filter.__subclasses__())
+        return map(self.class_to_name, Filter.__subclasses__())
 
-    def class_to_name(self,clazzz):
+    def class_to_name(self, clazzz):
         return camel_to_underscore(clazzz.__name__)
 
     def filter_class(self):
@@ -56,5 +59,29 @@ class FilterChangeRequestPage(ChangeRequestPage):
     def post(self):
         filter = self.filter_class()()
         filter.from_request(self.request)
-        filter.put()
+        self.filter_manager.create(filter)
         self.redirect('/')
+
+
+class DbChangeRequestPage(ChangeRequestPage):
+    def template_name(self):
+        return 'add_db'
+
+    def model(self):
+        return {
+            'filters': self.filter_manager.list()
+        }
+
+    def db_filter_opts(self):
+        db_opts = {}
+        for filter in self.filter_manager.list():
+            db_opts.update(filter.db_params_from_request(self.request))
+        return db_opts
+
+    def post(self):
+        db = Db()
+        db.from_request(self.request)
+        db.filter_matching_map = self.db_filter_opts()
+        self.db_manager.create(db)
+        self.redirect('/')
+

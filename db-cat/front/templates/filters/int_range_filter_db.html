@@ -1,0 +1,10 @@
+{% extends "filters/filter_db_layout.html" %}
+{% block filter_content %}
+<input type="range"
+       id="{{ filter.code }}"
+       name="{{ filter.code }}"
+       min="{{ filter.min }}"
+       max="{{ filter.max }}"
+       step="1"
+       value="{{ filter.min }}"/>
+{% endblock %}

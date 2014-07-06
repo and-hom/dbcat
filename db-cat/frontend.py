@@ -4,7 +4,7 @@ import os
 import webapp2
 import jinja2
 
-from front.pages import MainPage, FilterChangeRequestPage
+from front.pages import MainPage, FilterChangeRequestPage, DbChangeRequestPage
 from filter import SelectFilter, IntRangeFilter, BooleanFilter
 from util import filter_type
 
@@ -20,4 +20,5 @@ JINJA_ENVIRONMENT.filters['filter_type'] = filter_type
 frontend = webapp2.WSGIApplication([
                                        ('/', MainPage),
                                        ('/filter', FilterChangeRequestPage),
+                                       ('/db', DbChangeRequestPage),
                                    ], debug=True)
