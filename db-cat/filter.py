@@ -1,6 +1,6 @@
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
-from db import Db
+import logging
 import util
 from util import BaseManager
 
@@ -29,7 +29,7 @@ class Filter(polymodel.PolyModel):
         return {self.code: int(req.get(self.code))}
 
     def criteria(self, request):
-        return [ndb.GenericProperty(self.code) == request.get(self.code)]
+        return ndb.GenericProperty(self.code) == request.get(self.code)
 
 
 class IntRangeFilter(Filter):
@@ -50,15 +50,13 @@ class IntRangeFilter(Filter):
     def criteria(self, request):
         _from = request.get('%s_from' % self.code)
         _to = request.get('%s_to' % self.code)
-        return [ndb.GenericProperty(self.code) > _from if _from else None,
-                ndb.GenericProperty(self.code) < _to if _to else None]
+        return [ndb.GenericProperty(self.code) >= self.parse_int(_from) if _from else None,
+                ndb.GenericProperty(self.code) <= self.parse_int(_to) if _to else None]
 
 
 class BooleanFilter(Filter):
     def criteria(self, request):
-        str_val = request.get(self.code)
-        value = str_val.lower() == 'true' if str_val else False
-        return [ndb.GenericProperty(self.code) == (100 if value else 0)]
+        return ndb.GenericProperty(self.code) >= 50 if request.get(self.code) else None
 
 
 class SelectFilter(Filter):
@@ -97,11 +95,19 @@ class SelectFilter(Filter):
 
 
     def criteria(self, req):
-        for opt in self.options:
-            param_name = self.opt_param_name(opt)
-            if req.get(param_name):
-                return [ndb.GenericProperty(param_name) > 0]
-        return None
+        def option_or(or_cr, opt):
+            return self.or_criterion(or_cr, self.option_criteria(req, opt))
+
+        return reduce(option_or, self.options, None)
+
+    def or_criterion(self, a, b):
+        if a and b:
+            return ndb.OR(a, b)
+        return a or b
+
+    def option_criteria(self, req, opt):
+        param_name = self.opt_param_name(opt)
+        return ndb.GenericProperty(param_name) >= 50 if req.get(param_name) else None
 
 
 class FilterChangeRequest:

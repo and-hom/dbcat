@@ -35,7 +35,11 @@ class MainPage(BasePage):
 
     def one_filter_criteria(self, total_criteria, filter):
         filter_criteria = filter.criteria(self.request)
-        return total_criteria + filter_criteria if filter_criteria else total_criteria
+        if not filter_criteria:
+            return total_criteria
+        if isinstance(filter_criteria, (list, tuple)):
+            return total_criteria + filter_criteria
+        return total_criteria + [filter_criteria]
 
 
 class ChangeRequestPage(BasePage):
