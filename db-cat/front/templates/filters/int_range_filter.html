@@ -1,7 +1,17 @@
 {% extends "filters/filter_layout.html" %}
 {% block filter_content %}
-    <label for="{{filter.code}}_from" style="display:inline;margin-right:5px;">From:</label>
-    <input type="text" id="{{filter.code}}_from" name="{{filter.code}}_from" placeholder="{{ filter.min }}" class="input-mini"/>
-    <label for="{{filter.code}}_to" style="display:inline;margin-left:5px;margin-right:5px;">To:</label>
-    <input type="text" id="{{filter.code}}_to" name="{{filter.code}}_to" placeholder="{{ filter.max }}" class="input-mini"/>
+<label for="{{filter.code}}_from" style="display:inline;margin-right:5px;">From:</label>
+<input type="text"
+       id="{{filter.code}}_from"
+       name="{{filter.code}}_from"
+       value="{{ request.get(filter.code+'_from') }}"
+       placeholder="{{ filter.min }}"
+       class="input-mini"/>
+<label for="{{filter.code}}_to" style="display:inline;margin-left:5px;margin-right:5px;">To:</label>
+<input type="text"
+       id="{{filter.code}}_to"
+       name="{{filter.code}}_to"
+       value="{{ request.get(filter.code+'_to') }}"
+       placeholder="{{ filter.max }}"
+       class="input-mini"/>
 {% endblock %}

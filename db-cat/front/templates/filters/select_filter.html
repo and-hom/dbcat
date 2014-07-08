@@ -1,11 +1,24 @@
 {% extends "filters/filter_layout.html" %}
 {% block filter_content %}
 <select id="{{filter.code}}" name="{{filter.code}}">
+    {% for option in filter.options %}
+        {% if request.get(filter.code)==option %}
+            %{ set has_selected_option=True %}
+        {% endif %}
+    {% endfor %}
     {% if filter.required %}
-        <option selected="selected"></option>
+        {% if has_selected_option %}
+            <option></option>
+        {% else %}
+            <option selected="selected"></option>
+        {% endif %}
     {% endif %}
     {% for option in filter.options %}
-    <option value="{{option}}">{{option}}</option>
+        {% if request.get(filter.code)==option %}
+            <option value="{{option}}" selected="selected">{{filter.options[option]}}</option>
+        {% else %}
+            <option value="{{option}}">{{filter.options[option]}}</option>
+        {% endif %}
     {% endfor %}
 </select>
 {% endblock %}

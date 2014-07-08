@@ -1,4 +1,8 @@
 {% extends "filters/filter_layout.html" %}
 {% block filter_content %}
+{% if request.get(filter.code) %}
+<input type="checkbox" id="{{filter.code}}" name="{{filter.code}}" checked="checked"/>
+{% else %}
 <input type="checkbox" id="{{filter.code}}" name="{{filter.code}}"/>
+{% endif %}
 {% endblock %}

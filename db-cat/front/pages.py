@@ -27,7 +27,8 @@ class MainPage(BasePage):
     def model(self):
         return {
             "filters": self.filter_manager.list(),
-            "search_result": self.db_manager.query(self.criteria())
+            "search_result": self.db_manager.query(self.criteria()),
+            "request": self.request
         }
 
     def criteria(self):
