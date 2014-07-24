@@ -1,3 +1,5 @@
 .idea
-.pyc
-.log
+*.pyc
+*.log
+__pycache__
+*.sqlite3
