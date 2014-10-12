@@ -1,0 +1,11 @@
+{% load dbcat_extras %}
+{{ param_form.initial|get_item:'filter'|get_attr:'name' }}
+{{ param_form.initial|get_item:'filter_name' }}
+
+<input type="range"
+       min="0"
+       max="100"
+       step="10"
+       id=""
+       name=""
+       value="0"/>

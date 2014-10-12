@@ -1,12 +1,15 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
-from django.contrib import admin
-admin.autodiscover()
+from frontend.views import index, db, boolean_filter, int_range_filter, select_filter
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'dbcat.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+                       # Examples:
+                       # url(r'^$', 'dbcat.views.home', name='home'),
+                       # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
+                       url(r'^$', index),
+                       url(r'^boolean_filter$', boolean_filter),
+                       url(r'^int_range_filter$', int_range_filter),
+                       url(r'^select_filter$', select_filter),
+                       url(r'^db$', db),
 )

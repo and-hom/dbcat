@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="type" value="{{ filter_type }}"/>
+    {% include "form_err.html" %}
+    <div class="control-group">
+    {{ form.as_p }}
+
+        {% block filter_content %} {% endblock %}
+    </div>
+    <input type="submit"/>
+</form>
+
+{% endblock %}

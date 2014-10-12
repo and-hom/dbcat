@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% load dbcat_extras %}
+{% block content %}
+<!--Filter-->
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="well">
+                <form action="/" method="get" class="form-horizontal">
+                    <fieldset>
+                        {% for filter in filters %}
+                            {% include filter|template_name %}
+                        {% endfor %}
+                        <button type="submit" name="filter">Filter</button>
+                        <button type="reset" name="reset">Reset</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="span9">
+            {% for db in search_result %}
+            <p>
+                <h2>{{ db.name }}</h2>
+                <a href="{{ db.homepage }}" target="_blank">{{ db.homepage }}</a>
+                {{ db.short_description }}
+            </p>
+            {% empty %}
+            <div class="alert alert-info">
+                Nothing found
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!--Body-->
+{% endblock %}

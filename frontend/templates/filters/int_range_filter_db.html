@@ -1,0 +1,10 @@
+{% load dbcat_extras %}
+{{ param_form.initial|get_item:'filter'|get_attr:'name' }}
+
+<input type="range"
+       min="{{ param_form.initial|get_item:'filter'|get_attr:'min' }}"
+       max="{{ param_form.initial|get_item:'filter'|get_attr:'max' }}"
+       step="1"
+       id=""
+       name=""
+       value="{{ param_form.initial|get_item:'filter'|get_attr:'min' }}"/>
