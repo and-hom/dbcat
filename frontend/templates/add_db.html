@@ -5,10 +5,23 @@
     {% csrf_token %}
     {% include "form_err.html" %}
     {{ form.as_p }}
+    {{ param_formset.management_form }}
     {{ param_formset.non_form_errors.as_ul }}
-    {{ param_formset.as_p }}
 
-</table>
+    <table id="param_formset" class="form">
+    {% for param_form in param_formset.forms %}
+        <tr class="{% cycle row1,row2 %}">
+            <td>
+                {% for hidden in param_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+
+
+                {% include param_form|template_name_db %}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
     <input type="submit"/>
     <input type="reset"/>
 </form>

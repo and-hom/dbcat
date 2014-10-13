@@ -69,9 +69,9 @@ def db(request):
         form = DbForm(request.POST)
         param_formset = DbParamFormSet(request.POST)
         if form.is_valid():
-            db = form.save()
-            param_formset.instance = db
+            param_formset.instance = form.instance
             if param_formset.is_valid():
+                form.save()
                 param_formset.save()
                 return HttpResponseRedirect('/')
     else:
@@ -94,6 +94,8 @@ def db_param_formset():
 
     for subform, form in zip(param_formset.forms, param_form_objects):
         subform.initial = form
+        subform.filter = form['filter']
+        subform.filter_id = form['filter_id']
     return param_formset
 
 
@@ -105,12 +107,3 @@ def db_param_form_count(filters):
     :return:
     """
     return reduce(lambda sum, filter: sum + filter.db_param_count(), filters)
-
-
-# UI-форма для одного параметра DB (ключ-значение, string-int)
-def create_db_param_form(filter):
-    return {
-        'filter': filter,
-        'filter_id': filter.code,
-        'filter_name': filter.name,
-    }

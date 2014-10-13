@@ -1,6 +1,10 @@
+from django.forms.fields import CharField
+
 from django.forms.models import ModelForm, inlineformset_factory
+from django.forms.widgets import HiddenInput
 
 from frontend.models import Db, BooleanFilter, SelectFilter, IntRangeFilter, SelectOption, DbParam
+
 from frontend.util import underscore_to_camel
 
 
@@ -10,6 +14,9 @@ class DbForm(ModelForm):
 
 
 class DbParamForm(ModelForm):
+    filter_id = CharField(max_length=32, widget=HiddenInput())
+    name = CharField(max_length=128, widget=HiddenInput())
+    code = CharField(max_length=32, widget=HiddenInput())
     class Meta:
         model = DbParam
         fields = ('value',)
