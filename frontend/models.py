@@ -61,6 +61,6 @@ class Db(models.Model):
 
 class DbParam(models.Model):
     db = models.ForeignKey(Db, null=False)
-    filter = models.ForeignKey(Filter, null=False)
+    filter = models.ForeignKey(Filter, null=True)
     code = models.CharField(null=True, blank=True, max_length=32)
     value = models.IntegerField()

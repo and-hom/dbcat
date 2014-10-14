@@ -64,12 +64,20 @@ def select_filter(request):
     }))
 
 
+def set_filter_links(param_formset):
+    for form in param_formset:
+        id = form['filter_id'].value()
+        filter = Filter.objects.select_subclasses().get(code=id)
+        form.instance.filter = filter
+
+
 def db(request):
     if request.method == 'POST':
         form = DbForm(request.POST)
         param_formset = DbParamFormSet(request.POST)
         if form.is_valid():
             param_formset.instance = form.instance
+            set_filter_links(param_formset)
             if param_formset.is_valid():
                 form.save()
                 param_formset.save()
