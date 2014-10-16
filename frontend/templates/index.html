@@ -17,13 +17,33 @@
                 </form>
             </div>
         </div>
-        <div class="span9">
+        <div class="span9" style="margin-left:20px;">
             {% for db in search_result %}
-            <p>
-                <h2>{{ db.name }}</h2>
-                <a href="{{ db.homepage }}" target="_blank">{{ db.homepage }}</a>
-                {{ db.short_description }}
-            </p>
+            <div class="well">
+                <div class="db-desc">
+                    <p class="db-url"><a href="{{ db.homepage }}" target="_blank">{{ db.homepage }}</a></p>
+
+                    <h2>{{ db.name }}</h2>
+
+                    <p class="db-short-desc">{{ db.short_description }}</p>
+                    <p class="db-full-desc">{{ db.description }}</p>
+                    <dl class="dl-horizontal">
+                        {% for param in db.sorted_param_set %}
+                        <dt style="width:250px;">
+                            {% ifchanged param.filter.code %}
+                                {{ param.filter.name }}
+                            {% else %}
+                                &nbsp;
+                            {% endifchanged %}
+                        </dt>
+                        <dd style="margin-left:270px;">
+                            {% include param.filter.code|template_name_value %}
+                        </dd>
+                        {{ p2 }}
+                        {% endfor %}
+                    </dl>
+                </div>
+            </div>
             {% empty %}
             <div class="alert alert-info">
                 Nothing found
@@ -34,4 +54,18 @@
 </div>
 
 <!--Body-->
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function(){
+            $('.db-desc').readmore({
+                speed: 700,
+                maxHeight:  120,
+                moreLink: '<a href="#">Read more</a>',
+                lessLink: '<a href="#">Collapse</a>',
+                embedCSS: false
+            });
+        });
+    </script>
 {% endblock %}

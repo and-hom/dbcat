@@ -1,0 +1,8 @@
+{% load dbcat_extras %}
+{% if param.value == 0 %}
+        No
+{% elif  param.value == 100 %}
+        Yes
+{% else %}
+    <progress value="{{ param.value }}" max="100"></progress>
+{% endif %}

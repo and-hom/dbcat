@@ -19,6 +19,12 @@ def template_name_db(form):
     filter_code = camel_to_underscore(value.__class__.__name__)
     return 'filters/%s_db.html' % filter_code
 
+@register.filter
+def template_name_value(filter_id):
+    filter = get_filter_by_id(filter_id)
+    filter_code = camel_to_underscore(filter.__class__.__name__)
+    return 'filters/%s_value.html' % filter_code
+
 
 @register.filter
 def filter_name(form):
