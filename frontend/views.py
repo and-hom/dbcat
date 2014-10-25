@@ -1,11 +1,13 @@
 from functools import reduce
+
 from django.forms.models import inlineformset_factory
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
 
+
 # Create your views here.
 from django.template.context import RequestContext
-from frontend.forms import DbForm, FilterFormFactory, SelectFilterOptionFormSet, DbParamFormSet, DbParamForm
+from frontend.forms import DbForm, FilterFormFactory, SelectFilterOptionFormSet, DbParamFormSet
 from frontend.models import Filter, SelectFilter, Db, DbParam
 
 
@@ -84,34 +86,51 @@ def db(request):
                 return HttpResponseRedirect('/')
     else:
         form = DbForm()
-        param_formset = db_param_formset()
+        param_formsets = db_param_formsets()
 
     return render_to_response('add_db.html', context_instance=RequestContext(request, {
         'form': form,
-        'param_formset': param_formset,
+        'param_formsets': param_formsets,
     }))
 
 
-# Список форм для параметров базы
-def db_param_formset():
-    filters = Filter.objects.select_subclasses()
-    param_form_objects = reduce(lambda pfo, filter: pfo + filter.param_form_objects(), filters, [])
-
-    param_formset = inlineformset_factory(Db, DbParam, extra=len(param_form_objects), can_delete=False,
-                                          form=DbParamForm)(instance=Db())
-
-    for subform, form in zip(param_formset.forms, param_form_objects):
-        subform.initial = form
-        subform.filter = form['filter']
-        subform.filter_id = form['filter_id']
-    return param_formset
-
-
-def db_param_form_count(filters):
+def db_param_formsets():
     """
-    Каждый фильтр может порождать более чем одну характеристику базы. Например, select порождает
-    столько характеристик, сколько у него опций.
-    :param filters:
+    Список форм для параметров базы
     :return:
     """
-    return reduce(lambda sum, filter: sum + filter.db_param_count(), filters)
+    filters = Filter.objects.select_subclasses()
+    by_type = filters_by_type(filters)
+    return create_formsets(by_type).values()
+
+
+def filters_by_type(filters):
+    def add_to_dict(dict, filter):
+        key = filter.__class__
+        old_val = dict.get(key, [])
+        new_val = old_val + [filter]
+        dict[key] = new_val
+        return dict
+
+    return reduce(add_to_dict, filters, {})
+
+
+def create_formsets(filters_by_type):
+    result = {}
+    for type, filters in filters_by_type.items():
+        forms = formset(type.form_type(),filters)
+        result[type] = forms
+    return result
+
+
+def formset(form_type, filters):
+    size = len(filters) if filters else 0
+    param_type = form_type.Meta.model
+    forms = inlineformset_factory(Db, param_type, extra=size, can_delete=False, form=form_type)(instance=Db())
+
+    for subform, filter in zip(forms.forms, filters):
+        subform.initial = filter.initial()
+        subform.filter = filter
+        subform.filter_id = filter.code
+        subform.after_filter_set()
+    return forms
