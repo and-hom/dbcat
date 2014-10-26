@@ -3,8 +3,8 @@ from django.forms.models import ModelForm, inlineformset_factory
 from django.forms.util import ErrorList
 from django.forms.widgets import HiddenInput, TextInput
 
-from frontend.models import Db, BooleanFilter, SelectFilter, IntRangeFilter, SelectOption, DbParam, SimpleDbParam, \
-    SelectDbParam
+from frontend.models import Db, BooleanFilter, SelectFilter, IntRangeFilter, SelectOption, SimpleDbParam, \
+    SelectDbParam, Filter
 from frontend.util import underscore_to_camel
 
 
@@ -29,6 +29,8 @@ class DbForm(ModelForm):
 
 
 class DbParamForm(ModelForm):
+    filter_id = CharField(max_length=32, widget=HiddenInput())
+
     def after_filter_set(self):
         pass
 
@@ -38,11 +40,10 @@ class DbParamForm(ModelForm):
 
 
 class SimpleDbParamForm(DbParamForm):
-    filter_id = CharField(max_length=32, widget=HiddenInput())
 
     class Meta:
         model = SimpleDbParam
-        fields = ('value', )
+        fields = ('value', 'filter_id', )
         widgets = {
             'value': RangeInput(attrs={'min': 0, 'max': 100, 'value': 0, 'label': '######'}),
         }
@@ -60,23 +61,12 @@ class SimpleDbParamForm(DbParamForm):
 class SelectDbParamForm(DbParamForm):
     class Meta:
         model = SelectDbParam
-        fields = ()
-
-
-    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, initial=None, error_class=ErrorList,
-                 label_suffix=None, empty_permitted=False, instance=None):
-        super().__init__(data, files, auto_id, prefix, initial, error_class, label_suffix, empty_permitted, instance)
+        fields = ('filter_id',)
 
     def after_filter_set(self):
         for option in self.filter.selectoption_set.all():
             self.fields[option.code] = IntegerField(min_value=0, max_value=100,
                                                     widget=RangeInput(attrs={'label': option.name}))
-    #
-    # def as_custom_layout(self):
-    #     return '<table>' + self.as_table() + '</table>'
-
-
-DbParamFormSet = inlineformset_factory(Db, DbParam, can_delete=False, form=DbParamForm)
 
 
 class BooleanFilterForm(ModelForm):

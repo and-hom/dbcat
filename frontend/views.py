@@ -7,8 +7,8 @@ from django.shortcuts import render_to_response
 
 # Create your views here.
 from django.template.context import RequestContext
-from frontend.forms import DbForm, FilterFormFactory, SelectFilterOptionFormSet, DbParamFormSet
-from frontend.models import Filter, SelectFilter, Db, DbParam
+from frontend.forms import DbForm, FilterFormFactory, SelectFilterOptionFormSet
+from frontend.models import Filter, SelectFilter, Db, SelectDbParam
 
 
 def index(request):
@@ -76,14 +76,9 @@ def set_filter_links(param_formset):
 def db(request):
     if request.method == 'POST':
         form = DbForm(request.POST)
-        param_formset = DbParamFormSet(request.POST)
-        if form.is_valid():
-            param_formset.instance = form.instance
-            set_filter_links(param_formset)
-            if param_formset.is_valid():
-                form.save()
-                param_formset.save()
-                return HttpResponseRedirect('/')
+        param_formsets = db_param_formsets(request.POST)
+        if save_if_valid(form, param_formsets):
+            return HttpResponseRedirect('/')
     else:
         form = DbForm()
         param_formsets = db_param_formsets()
@@ -94,14 +89,39 @@ def db(request):
     }))
 
 
-def db_param_formsets():
+def save_if_valid(form, param_formsets):
+    if form.is_valid():
+        formsets_are_all_valid = all_valid(form, param_formsets)
+        if formsets_are_all_valid:
+            form.save()
+            save_formsets(param_formsets)
+            return True
+    return False
+
+
+def all_valid(form, param_formsets):
+    result = True
+    for param_formset in param_formsets:
+        param_formset.instance = form.instance
+        set_filter_links(param_formset)
+        if not param_formset.is_valid():
+            result = False
+    return result
+
+
+def save_formsets(param_formsets):
+    for param_formset in param_formsets:
+        param_formset.save()
+
+
+def db_param_formsets(post=None):
     """
     Список форм для параметров базы
     :return:
     """
     filters = Filter.objects.select_subclasses()
     by_type = filters_by_type(filters)
-    return create_formsets(by_type).values()
+    return create_formsets(by_type, post).values()
 
 
 def filters_by_type(filters):
@@ -115,22 +135,28 @@ def filters_by_type(filters):
     return reduce(add_to_dict, filters, {})
 
 
-def create_formsets(filters_by_type):
+def create_formsets(by_type, post=None):
     result = {}
-    for type, filters in filters_by_type.items():
-        forms = formset(type.form_type(),filters)
+    for type, filters in by_type.items():
+        forms = formset(type.form_type(), type.__name__, filters, post)
         result[type] = forms
     return result
 
 
-def formset(form_type, filters):
+def formset(form_type, prefix, filters, post=None):
     size = len(filters) if filters else 0
     param_type = form_type.Meta.model
-    forms = inlineformset_factory(Db, param_type, extra=size, can_delete=False, form=form_type)(instance=Db())
+    formset_type = inlineformset_factory(Db, param_type, extra=size, can_delete=False, form=form_type)
 
-    for subform, filter in zip(forms.forms, filters):
+    if post:
+        _formset = formset_type(post, instance=Db(), prefix=prefix)
+    else:
+        _formset = formset_type(instance=Db(), prefix=prefix)
+
+    for subform, filter in zip(_formset.forms, filters):
         subform.initial = filter.initial()
         subform.filter = filter
         subform.filter_id = filter.code
         subform.after_filter_set()
-    return forms
+    return _formset
+

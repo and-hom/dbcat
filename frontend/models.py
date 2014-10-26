@@ -10,11 +10,10 @@ class Filter(models.Model):
 
     objects = InheritanceManager()
 
-    def create_db_param(self):
-        return SimpleDbParam()
-
     def initial(self):
-        return {}
+        return {
+            "filter_id": self.code
+        }
 
     @classmethod
     def form_type(cls):
@@ -38,24 +37,17 @@ class SelectFilter(Filter):
     def opts(self):
         return SelectOption.objects.filter(filter=self)
 
-    def create_db_param(self):
-        param = SelectDbParam()
-        for option in self.selectoption_set:
-            param_option = SelectDbParamOption()
-            param_option.param = param
-            param_option.option = option
-            param.selectdbparamoption_set.add(param_option)
-        return param
-
-
     @classmethod
     def form_type(cls):
         from frontend.forms import SelectDbParamForm
 
         return SelectDbParamForm
 
+
     def initial(self):
-        initial_data = {}
+        initial_data = {
+            "filter_id": self.code
+        }
         for option in self.selectoption_set.all():
             initial_data[option.code] = 0
         return initial_data

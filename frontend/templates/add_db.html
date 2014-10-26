@@ -16,12 +16,14 @@
 
                 <table id="param_formset" class="form">
                     {% for param_formset in param_formsets %}
+                    {{ param_formset.management_form }}
                     {% for param_form in param_formset.forms %}
                     <tr class="{% cycle row1,row2 %}">
                         <th style="padding-right:10px;">
                             {{ param_form.filter.name }}
                         </th>
                         <td>
+                            {{ param_form.errors }}
                             {{ param_form.as_custom_layout }}
                         </td>
                     </tr>
