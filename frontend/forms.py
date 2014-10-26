@@ -45,17 +45,21 @@ class SimpleDbParamForm(DbParamForm):
         model = SimpleDbParam
         fields = ('value', 'filter_id', )
         widgets = {
-            'value': RangeInput(attrs={'min': 0, 'max': 100, 'value': 0, 'label': '######'}),
+            'value': RangeInput(attrs={'value': 0, 'label': '######'}),
         }
 
     def as_custom_layout(self):
         return self.as_p()
 
 
-    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, initial=None, error_class=ErrorList,
-                 label_suffix=None, empty_permitted=False, instance=None):
-        super().__init__(data, files, auto_id, prefix, initial, error_class, label_suffix, empty_permitted, instance)
+    def after_filter_set(self):
         self.fields['value'].label = ''
+
+class IntRangeDbParamForm(SimpleDbParamForm):
+    def after_filter_set(self):
+        super().after_filter_set()
+        self.fields['value'].widget.attrs['min']=self.filter.min
+        self.fields['value'].widget.attrs['max']=self.filter.max
 
 
 class SelectDbParamForm(DbParamForm):

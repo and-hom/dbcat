@@ -26,6 +26,12 @@ class IntRangeFilter(Filter):
     min = models.IntegerField()
     max = models.IntegerField()
 
+    @classmethod
+    def form_type(cls):
+        from frontend.forms import IntRangeDbParamForm
+
+        return IntRangeDbParamForm
+
 
 class BooleanFilter(Filter):
     pass
@@ -67,12 +73,13 @@ class Db(models.Model):
 
     @property
     def sorted_param_set(self):
-        return self.dbparam_set.order_by('filter__priority', 'filter__code')
+        return DbParam.objects.select_subclasses().filter(db_id=self.id).order_by('filter__priority', 'filter__code')
 
 
 class DbParam(models.Model):
     db = models.ForeignKey(Db, null=False)
     filter = models.ForeignKey(Filter, null=False)
+    objects = InheritanceManager()
 
 
 class SimpleDbParam(DbParam):
@@ -80,7 +87,9 @@ class SimpleDbParam(DbParam):
 
 
 class SelectDbParam(DbParam):
-    pass
+    @property
+    def options(self):
+        return self.selectdbparamoption_set.all()
 
 
 class SelectDbParamOption(models.Model):
