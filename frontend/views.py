@@ -8,15 +8,23 @@ from django.shortcuts import render_to_response
 # Create your views here.
 from django.template.context import RequestContext
 from frontend.forms import DbForm, FilterFormFactory, SelectFilterOptionFormSet
-from frontend.models import Filter, SelectFilter, Db, SelectDbParam
+from frontend.models import Filter, SelectFilter, Db
 
 
 def index(request):
+    dbs = find_dbs(request)
     return render_to_response('index.html',
                               context_instance=RequestContext(request, {
                                   "filters": Filter.objects.select_subclasses(),
-                                  "search_result": Db.objects.all()
+                                  "search_result": dbs
                               }))
+
+
+def find_dbs(request):
+    criteria = Db.objects
+    for filter in Filter.objects.select_subclasses().all():
+        criteria = filter.append_criteria(criteria, request.GET)
+    return criteria.distinct().all()
 
 
 def boolean_filter(request):
@@ -112,7 +120,7 @@ def all_valid(form, param_formsets):
 def save_formsets(param_formsets, db):
     for param_formset in param_formsets:
         for form in param_formset.forms:
-            form.instance.db=db
+            form.instance.db = db
         param_formset.save()
 
 

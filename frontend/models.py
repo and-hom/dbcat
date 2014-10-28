@@ -21,6 +21,9 @@ class Filter(models.Model):
 
         return SimpleDbParamForm
 
+    def append_criteria(self, criteria, get):
+        return criteria
+
 
 class IntRangeFilter(Filter):
     min = models.IntegerField()
@@ -32,9 +35,24 @@ class IntRangeFilter(Filter):
 
         return IntRangeDbParamForm
 
+    def append_criteria(self, criteria, get):
+        _from = get.get('%s_from' % self.code)
+        _to = get.get('%s_to' % self.code)
+        if _from:
+            criteria = criteria.filter(dbparam__simpledbparam__value__gte=_from,dbparam__filter__code=self.code)
+        if _to:
+            criteria = criteria.filter(dbparam__simpledbparam__value__lte=_to,dbparam__filter__code=self.code)
+        return criteria
+
 
 class BooleanFilter(Filter):
-    pass
+    def append_criteria(self, criteria, get):
+        if get.get(self.code) == 'on':
+            return criteria.filter(dbparam__simpledbparam__value__gte=50,dbparam__filter__code=self.code)
+        elif get.get(self.code) == 'off':
+            return criteria.filter(dbparam__simpledbparam__value__lt=50,dbparam__filter__code=self.code)
+        else:
+            return criteria
 
 
 class SelectFilter(Filter):
@@ -57,6 +75,15 @@ class SelectFilter(Filter):
         for option in self.selectoption_set.all():
             initial_data[option.code] = 0
         return initial_data
+
+    def append_criteria(self, criteria, get):
+        selected = get.get(self.code)
+        for option in self.selectoption_set.all().iterator():
+            if selected and option.code in selected:
+                criteria = criteria.filter(dbparam__selectdbparam__selectdbparamoption__value__gte=30,
+                                           dbparam__selectdbparam__selectdbparamoption__option__code=option.code,
+                                           dbparam__filter__code=self.code)
+        return criteria
 
 
 class SelectOption(models.Model):
