@@ -1,10 +1,10 @@
-from django.forms.fields import CharField, IntegerField
+from django.forms.fields import CharField, IntegerField, MultiValueField
 from django.forms.models import ModelForm, inlineformset_factory
 from django.forms.util import ErrorList
 from django.forms.widgets import HiddenInput, TextInput
 
 from frontend.models import Db, BooleanFilter, SelectFilter, IntRangeFilter, SelectOption, SimpleDbParam, \
-    SelectDbParam, Filter
+    SelectDbParam, Filter, SelectDbParamOption
 from frontend.util import underscore_to_camel
 
 
@@ -71,6 +71,20 @@ class SelectDbParamForm(DbParamForm):
         for option in self.filter.selectoption_set.all():
             self.fields[option.code] = IntegerField(min_value=0, max_value=100,
                                                     widget=RangeInput(attrs={'label': option.name}))
+
+    def save(self, commit=True):
+        obj = super().save(commit)
+        obj.save()
+        for option in self.filter.selectoption_set.all():
+            field = self[option.code]
+            if field:
+                paramOption = SelectDbParamOption()
+                paramOption.param=obj
+                paramOption.param_id=obj.id
+                paramOption.option=option
+                paramOption.value=field.value()
+                paramOption.save()
+        return obj
 
 
 class BooleanFilterForm(ModelForm):

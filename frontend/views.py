@@ -93,8 +93,8 @@ def save_if_valid(form, param_formsets):
     if form.is_valid():
         formsets_are_all_valid = all_valid(form, param_formsets)
         if formsets_are_all_valid:
-            form.save()
-            save_formsets(param_formsets)
+            db = form.save()
+            save_formsets(param_formsets, db)
             return True
     return False
 
@@ -109,8 +109,10 @@ def all_valid(form, param_formsets):
     return result
 
 
-def save_formsets(param_formsets):
+def save_formsets(param_formsets, db):
     for param_formset in param_formsets:
+        for form in param_formset.forms:
+            form.instance.db=db
         param_formset.save()
 
 

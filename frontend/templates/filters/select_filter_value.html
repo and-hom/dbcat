@@ -1,3 +1,6 @@
 {% for option in param.options %}
-<progress value="{{ param.value }}" max="100"></progress><span style="margin-left:10px;">{{ param.select_option_name }}</span>
+<div>
+<progress value="{{ option.value }}" max="100"></progress><span
+        style="margin-left:10px;">{{ option.option.name }}</span>
+    </div>
 {% endfor %}
