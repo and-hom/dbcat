@@ -30,11 +30,7 @@
                     <dl class="dl-horizontal">
                         {% for param in db.sorted_param_set %}
                         <dt style="width:250px;">
-                            {% ifchanged param.filter.code %}
-                                {{ param.filter.name }}
-                            {% else %}
-                                &nbsp;
-                            {% endifchanged %}
+                            {{ param.filter.name }}
                         </dt>
                         <dd style="margin-left:270px;">
                             {% include param.filter.code|template_name_value %}

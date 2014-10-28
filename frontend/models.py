@@ -10,11 +10,10 @@ class Filter(models.Model):
 
     objects = InheritanceManager()
 
-    def create_db_param(self):
-        return SimpleDbParam()
-
     def initial(self):
-        return {}
+        return {
+            "filter_id": self.code
+        }
 
     @classmethod
     def form_type(cls):
@@ -27,6 +26,12 @@ class IntRangeFilter(Filter):
     min = models.IntegerField()
     max = models.IntegerField()
 
+    @classmethod
+    def form_type(cls):
+        from frontend.forms import IntRangeDbParamForm
+
+        return IntRangeDbParamForm
+
 
 class BooleanFilter(Filter):
     pass
@@ -38,24 +43,17 @@ class SelectFilter(Filter):
     def opts(self):
         return SelectOption.objects.filter(filter=self)
 
-    def create_db_param(self):
-        param = SelectDbParam()
-        for option in self.selectoption_set:
-            param_option = SelectDbParamOption()
-            param_option.param = param
-            param_option.option = option
-            param.selectdbparamoption_set.add(param_option)
-        return param
-
-
     @classmethod
     def form_type(cls):
         from frontend.forms import SelectDbParamForm
 
         return SelectDbParamForm
 
+
     def initial(self):
-        initial_data = {}
+        initial_data = {
+            "filter_id": self.code
+        }
         for option in self.selectoption_set.all():
             initial_data[option.code] = 0
         return initial_data
@@ -75,12 +73,13 @@ class Db(models.Model):
 
     @property
     def sorted_param_set(self):
-        return self.dbparam_set.order_by('filter__priority', 'filter__code')
+        return DbParam.objects.select_subclasses().filter(db_id=self.id).order_by('filter__priority', 'filter__code')
 
 
 class DbParam(models.Model):
     db = models.ForeignKey(Db, null=False)
     filter = models.ForeignKey(Filter, null=False)
+    objects = InheritanceManager()
 
 
 class SimpleDbParam(DbParam):
@@ -88,7 +87,9 @@ class SimpleDbParam(DbParam):
 
 
 class SelectDbParam(DbParam):
-    pass
+    @property
+    def options(self):
+        return self.selectdbparamoption_set.all()
 
 
 class SelectDbParamOption(models.Model):

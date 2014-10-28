@@ -1,10 +1,10 @@
-from django.forms.fields import CharField, IntegerField
+from django.forms.fields import CharField, IntegerField, MultiValueField
 from django.forms.models import ModelForm, inlineformset_factory
 from django.forms.util import ErrorList
 from django.forms.widgets import HiddenInput, TextInput
 
-from frontend.models import Db, BooleanFilter, SelectFilter, IntRangeFilter, SelectOption, DbParam, SimpleDbParam, \
-    SelectDbParam
+from frontend.models import Db, BooleanFilter, SelectFilter, IntRangeFilter, SelectOption, SimpleDbParam, \
+    SelectDbParam, Filter, SelectDbParamOption
 from frontend.util import underscore_to_camel
 
 
@@ -29,6 +29,8 @@ class DbForm(ModelForm):
 
 
 class DbParamForm(ModelForm):
+    filter_id = CharField(max_length=32, widget=HiddenInput())
+
     def after_filter_set(self):
         pass
 
@@ -38,45 +40,51 @@ class DbParamForm(ModelForm):
 
 
 class SimpleDbParamForm(DbParamForm):
-    filter_id = CharField(max_length=32, widget=HiddenInput())
 
     class Meta:
         model = SimpleDbParam
-        fields = ('value', )
+        fields = ('value', 'filter_id', )
         widgets = {
-            'value': RangeInput(attrs={'min': 0, 'max': 100, 'value': 0, 'label': '######'}),
+            'value': RangeInput(attrs={'value': 0, 'label': '######'}),
         }
 
     def as_custom_layout(self):
         return self.as_p()
 
 
-    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, initial=None, error_class=ErrorList,
-                 label_suffix=None, empty_permitted=False, instance=None):
-        super().__init__(data, files, auto_id, prefix, initial, error_class, label_suffix, empty_permitted, instance)
+    def after_filter_set(self):
         self.fields['value'].label = ''
+
+class IntRangeDbParamForm(SimpleDbParamForm):
+    def after_filter_set(self):
+        super().after_filter_set()
+        self.fields['value'].widget.attrs['min']=self.filter.min
+        self.fields['value'].widget.attrs['max']=self.filter.max
 
 
 class SelectDbParamForm(DbParamForm):
     class Meta:
         model = SelectDbParam
-        fields = ()
-
-
-    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, initial=None, error_class=ErrorList,
-                 label_suffix=None, empty_permitted=False, instance=None):
-        super().__init__(data, files, auto_id, prefix, initial, error_class, label_suffix, empty_permitted, instance)
+        fields = ('filter_id',)
 
     def after_filter_set(self):
         for option in self.filter.selectoption_set.all():
             self.fields[option.code] = IntegerField(min_value=0, max_value=100,
                                                     widget=RangeInput(attrs={'label': option.name}))
-    #
-    # def as_custom_layout(self):
-    #     return '<table>' + self.as_table() + '</table>'
 
-
-DbParamFormSet = inlineformset_factory(Db, DbParam, can_delete=False, form=DbParamForm)
+    def save(self, commit=True):
+        obj = super().save(commit)
+        obj.save()
+        for option in self.filter.selectoption_set.all():
+            field = self[option.code]
+            if field:
+                paramOption = SelectDbParamOption()
+                paramOption.param=obj
+                paramOption.param_id=obj.id
+                paramOption.option=option
+                paramOption.value=field.value()
+                paramOption.save()
+        return obj
 
 
 class BooleanFilterForm(ModelForm):
