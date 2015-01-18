@@ -12,20 +12,11 @@ from frontend.models import Filter, SelectFilter, Db
 
 
 def index(request):
-    dbs = find_dbs(request)
     return render_to_response('index.html',
                               context_instance=RequestContext(request, {
                                   "filters": Filter.objects.select_subclasses(),
-                                  "search_result": dbs
+                                  "search_result": Db.find_by_filters(request)
                               }))
-
-
-def find_dbs(request):
-    criteria = Db.objects
-    for filter in Filter.objects.select_subclasses().all():
-        criteria = filter.append_criteria(criteria, request.GET)
-    return criteria.distinct().all()
-
 
 def boolean_filter(request):
     return filter(request, 'boolean_filter')
