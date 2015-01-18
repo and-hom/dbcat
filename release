@@ -1,0 +1,24 @@
+#!/bin/sh -eu
+
+git checkout develop
+git pull
+
+old_version=`cat version`
+old_version=`echo $old_version |  awk -v FS='.' -v OFS='.' '{$(NF) = 0; print $0}'`
+new_version=`echo $old_version | awk -v FS='.' -v OFS='.' '{$(NF-1) = $(NF-1) + 1; print $0}'| awk -v FS='.' -v OFS='.' '{$(NF) = 0; print $0}'`
+touch build_num
+dev_build_num=`cat build_num`
+
+git flow release start $old_version
+git checkout develop
+
+echo $new_version | cat > version
+echo '1' | cat > build_num
+git add version
+git commit -m 'Version switched '$old_version' -> '$new_version' for develop. Old version moved to RC' version 
+
+git checkout release/$old_version
+
+# Set build version to file
+echo -n $dev_build_num | cat > build_num
+
