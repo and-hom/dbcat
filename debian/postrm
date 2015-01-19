@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+if [ "$1" = "remove" ]; then
+    update-rc.d -f dbcat remove
+fi

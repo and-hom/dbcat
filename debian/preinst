@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+if [ -f /etc/init.d/dbcat ]
+then
+    invoke-rc.d dbcat stop
+fi

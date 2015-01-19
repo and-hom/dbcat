@@ -1,0 +1,6 @@
+#!/bin/sh -eu
+
+git flow release finish
+git checkout master
+git-dch --git-author --ignore-branch --commit -N `cat version`
+

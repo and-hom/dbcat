@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+
+invoke-rc.d dbcat stop
+
+rm -f /etc/nginx/sites-enabled/dbcat
+invoke-rc.d nginx restart

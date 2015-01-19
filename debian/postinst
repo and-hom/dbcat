@@ -1,0 +1,31 @@
+#!/bin/sh -e
+
+INSTALL=easy_install3
+USER=dbcat
+GROUP=dbcat
+
+# user and group
+cut -d ':' -f 1 /etc/group | grep -q ^dbcat$ || groupadd $GROUP
+id -u $USER >/dev/null 2>&1 || useradd -m -d /var/lib/$USER -g $GROUP --shell /usr/sbin/nologin $USER
+
+# make dirs
+mkdir -p /var/log/dbcat
+chown dbcat:dbcat /var/log/dbcat
+
+# prepare python
+$INSTALL virtualenv
+virtualenv --python=python3 /var/lib/$USER/
+. /var/lib/$USER/bin/activate
+/var/lib/$USER/bin/pip3 install django django-model-utils gunicorn tornado psycopg2
+
+# enable nginx configuration
+ln -fs /etc/nginx/sites-available/dbcat /etc/nginx/sites-enabled/dbcat
+
+chown -R $USER:$GROUP /usr/share/dbcat
+
+# register start script
+update-rc.d dbcat defaults
+
+# start
+invoke-rc.d dbcat start
+invoke-rc.d nginx restart
