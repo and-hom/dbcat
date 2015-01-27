@@ -11,20 +11,6 @@
 <div class="navbar">
     <div class="navbar-inner">
         <a class="brand" href="/">DbCat</a>
-        <ul class="nav">
-            <li class="dropdown {{ filter_add_active }}">
-                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Add filter
-                    <b class="caret"></b>
-                    </a>
-                <ul class="dropdown-menu">
-                {% for filter_type in filter_types %}
-                    <li class="{{ filter_add_active }}"><a href="/{{ filter_type }}">{{ filter_type }}</a></li>
-                {% endfor %}
-                </ul>
-            </li>
-            <li class="{{ db_add_active }}"><a href="/db">Add db</a></li>
-        </ul>
     </div>
 </div>
 {% block content %} {% endblock %}
