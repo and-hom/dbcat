@@ -1,3 +1,9 @@
+dbcat (1.1) release; urgency=medium
+
+  * Build fixes
+
+ -- Андрей Хомяков <and.hom@gmail.com>  Thu, 29 Jan 2015 01:44:48 +0300
+
 dbcat (1.0) UNRELEASED; urgency=medium
 
   * Gitignore
