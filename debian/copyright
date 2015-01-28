@@ -1,0 +1,12 @@
+Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=135
+Name: dbcat
+Maintainer: Andrey Khomyakov <and.hom@gmail.com>
+Source: https://github.com/and-hom/dbcat/
+
+Copyright: 2014-2015 Andrey Khomyakov <and.hom@gmail.com>
+License: Internal usage
+
+
+
+License: Internal usage
+ For internal usage

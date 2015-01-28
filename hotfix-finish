@@ -1,0 +1,7 @@
+#!/bin/sh -eu
+
+git-dch --git-author --ignore-branch --commit -N `cat version`
+
+git flow hotfix finish
+git checkout master
+

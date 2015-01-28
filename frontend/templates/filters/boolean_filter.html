@@ -1,0 +1,9 @@
+{% extends "filters/filter_layout.html" %}
+{% load dbcat_extras %}
+{% block filter_content %}
+{% if filter.code|request_get_param:request %}
+<input type="checkbox" id="{{filter.code}}" name="{{filter.code}}" checked="checked"/>
+{% else %}
+<input type="checkbox" id="{{filter.code}}" name="{{filter.code}}"/>
+{% endif %}
+{% endblock %}

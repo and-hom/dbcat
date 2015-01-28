@@ -1,0 +1,9 @@
+Package: dbcat
+Version: #VERSION#
+Section: misc
+Priority: optional
+Architecture: all
+Depends: python3, python3-setuptools, nginx, postgresql-server-dev-all, python3-dev
+Maintainer: Andrey Khomyakov <and.hom@gmail.com>
+Description: Database catalogue with filtering
+ Web application for DB-engines info storage, browsing, searching and filtering

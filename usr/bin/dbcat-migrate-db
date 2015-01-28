@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -f /var/lib/dbcat/bin/activate ]
+then
+    . /var/lib/dbcat/bin/activate
+else
+    echo 'Can not open '/var/lib/dbcat/bin/activate
+    echo 'No python virtual env in '/var/lib/dbcat/
+    exit 1
+fi
+
+cd /usr/share/dbcat
+python3 ./manage.py syncdb
+exit

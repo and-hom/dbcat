@@ -1,0 +1,11 @@
+.idea
+*.pyc
+*.log
+*.deb
+__pycache__
+*.sqlite3
+build/*
+*.tar.xz
+1.sql
+*.tar
+build_num
