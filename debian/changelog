@@ -1,3 +1,26 @@
+dbcat (1.0) UNRELEASED; urgency=medium
+
+  * Gitignore
+  * Django project started
+  * SQLite db
+  * Refs #5 Reewrite app google_app_engine->django
+  * Refs #5 Django forms for db params
+  * Refs #5 Django custom form validation
+  * Refs #7 Look improvements:
+  * Refs #12 Display db-edit page
+  * Refs #12 Db save
+  * Refs #5 Switched to Postgresql
+  * Refs #12 Fixes
+  * Refs #12 Save db with all params
+  * Fix #13 Make filter button work on main page
+  * Fix #15 Order results by relevancy to filter
+  * Fix #8 Release and hotfix shell scripts
+  * Fix #14 deb package build script
+  * Refs #7 Removed not already implemented menu items
+  * Build fix
+
+ -- Андрей Хомяков <and.hom@gmail.com>  Thu, 29 Jan 2015 01:07:29 +0300
+
 dbcat (0.0) develop; urgency=medium
 
   * Project started.
