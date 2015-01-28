@@ -1,10 +1,11 @@
 #!/bin/sh -e
 
-SCRIPT_DIR=`realpath $(dirname $0)`
+SCRIPT_DIR=`readlink -f $(dirname $0)`
 BUILD_DIR=$SCRIPT_DIR/build
 
 APP_NAME=dbcat
 
+cd $SCRIPT_DIR
 VERSION=`cat $SCRIPT_DIR/version``test -f $SCRIPT_DIR/build_num && (echo -n '-';cat $SCRIPT_DIR/build_num) || echo -n`
 VERSION=`echo $VERSION | sed 's/ *$//'`
 echo Build $VERSION
@@ -14,7 +15,7 @@ echo $DEB_NAME
 
 echo Cleaning
 rm -rf $BUILD_DIR
-rm -f build.deb
+rm -f *.deb
 
 echo Create pkg structure
 mkdir -p $BUILD_DIR/usr/share/$APP_NAME
