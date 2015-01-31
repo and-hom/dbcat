@@ -1,3 +1,10 @@
+dbcat (1.2) release; urgency=medium
+
+  * Fix #24 Html fix for resolutions like 800x600 or 1280x800
+  * Fix #26 App version in meta - hidden, for development purposes only
+
+ -- Андрей Хомяков <and.hom@gmail.com>  Sat, 31 Jan 2015 21:19:35 +0300
+
 dbcat (1.1) release; urgency=medium
 
   * Build fixes
