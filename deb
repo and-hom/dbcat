@@ -36,6 +36,9 @@ sed -i 's/#VERSION#/'$VERSION'/g' $BUILD_DIR/DEBIAN/control
 find $BUILD_DIR/usr -name __pycache__ -prune -exec rm -rf {} \;
 find $BUILD_DIR/usr -name \*.pyc -prune -exec rm -rf {} \;
 
+echo Create version entry
+echo -n $VERSION > $BUILD_DIR/usr/share/$APP_NAME/frontend/templates/version
+
 echo Chmod
 chmod 755 $(find $BUILD_DIR/DEBIAN -type d)
 chmod 644 $BUILD_DIR/DEBIAN/control
