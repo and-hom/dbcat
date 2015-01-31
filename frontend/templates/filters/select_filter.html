@@ -1,7 +1,7 @@
 {% extends "filters/filter_layout.html" %}
 {% load dbcat_extras %}
 {% block filter_content %}
-<select id="{{filter.code}}" name="{{filter.code}}">
+<select id="{{filter.code}}" name="{{filter.code}}" style="width:100%">
     {% if not filter.required %}
         {% if filter.code|request_get_param:request %}
             <option></option>
