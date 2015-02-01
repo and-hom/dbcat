@@ -157,6 +157,10 @@ class Db(models.Model):
     def sorted_param_set(self):
         return DbParam.objects.select_subclasses().filter(db_id=self.id).order_by('filter__priority', 'filter__code')
 
+    @property
+    def usefull_links(self):
+        return DbUsefullLink.objects.filter(db_id=self.id).order_by('short_description')
+
     @classmethod
     def find_by_filters(cls, request):
         where_clauses = []
@@ -238,3 +242,10 @@ class SelectDbParamOption(models.Model):
     option = models.ForeignKey(SelectOption, null=False)
     value = models.IntegerField(null=False)
     comment = models.TextField(null=False, blank=False, max_length=512)
+
+
+class DbUsefullLink(models.Model):
+    db = models.ForeignKey(Db, null=False)
+    short_description = models.CharField(null=False, blank=False, max_length=128)
+    link = models.URLField()
+
