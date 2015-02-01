@@ -1,6 +1,34 @@
+{% load dbcat_extras %}
+{% if param.options|count_opts_more_then_x_grade:10 > 1 %}
+     <ul>
+     {% setvar "Y" as multiple %}
+     {% setvar "<li>" as li_open %}
+     {% setvar "</li>" as li_close %}
+{% else %}
+     {% setvar "" as multiple %}
+     {% setvar "" as li_open %}
+     {% setvar "" as li_close %}
+{% endif %}
+
 {% for option in param.options %}
-<div>
-<progress value="{{ option.value }}" max="100"></progress><span
-        style="margin-left:10px;">{{ option.option.name }}</span>
-    </div>
+    {{ li_open|safe|default:"" }}
+    {% if option.value >= 10 %}
+         <span style="
+        {% if  option.value < 30 %}
+            color:#c0c0c0;
+        {% elif  option.value < 50 %}
+            color:#959595;
+        {% elif  option.value < 70 %}
+            color:#707070;
+        {% elif  option.value < 90 %}
+            color:#404040;
+        {% else %}
+            color:#000000;
+        {% endif %}">{{ option.option.name }}&nbsp;{% help option.comment%}</span>
+    {% endif %}
+    {{ li_close|safe|default:"" }}
 {% endfor %}
+
+{% if multiple %}
+     </ul>
+{% endif %}
