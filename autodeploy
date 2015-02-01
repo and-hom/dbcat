@@ -1,0 +1,10 @@
+#!/bin/sh
+
+
+. ./var
+
+./deb
+
+sudo dpkg -i $DEB_NAME
+
+dbcat-migrate-db
