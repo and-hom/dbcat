@@ -1,3 +1,13 @@
+dbcat (1.3) release; urgency=medium
+
+  * Minor changes in UI: now only russian lang supported, so add some hardcoded russian messages
+  * Fix #28 Changed view of multiselect options in database description.
+  * Fix  #27 Comment on db param
+  * Fix #29 South migrations instead off syncdb
+  * Autodeploy script
+
+ -- Андрей Хомяков <and.hom@gmail.com>  Sun, 01 Feb 2015 22:54:38 +0300
+
 dbcat (1.2) release; urgency=medium
 
   * Fix #24 Html fix for resolutions like 800x600 or 1280x800
