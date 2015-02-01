@@ -16,7 +16,7 @@ chown dbcat:dbcat /var/log/dbcat
 $INSTALL virtualenv
 virtualenv --python=python3 /var/lib/$USER/
 . /var/lib/$USER/bin/activate
-/var/lib/$USER/bin/pip3 install django django-model-utils gunicorn tornado psycopg2
+/var/lib/$USER/bin/pip3 install django django-model-utils gunicorn tornado psycopg2 South
 
 # enable nginx configuration
 ln -fs /etc/nginx/sites-available/dbcat /etc/nginx/sites-enabled/dbcat
