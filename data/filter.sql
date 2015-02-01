@@ -54,25 +54,27 @@ DECLARE
 BEGIN
    execute select_filter('paradigm','Парадигма','',0, false,
 			array[['rel','Реляционная'],['keyval','Ключ-Значение'],['doc','Документно-ориентированная'],['col','Семейство столбцов'],['graph','Граф']]);
-   execute select_filter('atomic','Атомарность','',1, false,
+   execute select_filter('atomic','Атомарность','',10, false,
 			array[['tx','Транзакции'],['cas','Одна запись атомарна'],['no','Нет']]);			
-   execute select_filter('isolation','Изоляция','',2,false, 
+   execute select_filter('isolation','Изоляция','',20,false,
 			array[['block','Блокировки'],['ver','Версии']]);
 			
-   execute boolean_filter('shard','Шардирование','',3);	
-   execute select_filter('repl','Репликация','',4, false,
-			array[['ms','Блокировки'],['p2p','Версии'],['other','Другая'],['no','Нет']]); 
+   execute boolean_filter('shard','Шардирование','',30);
+   execute select_filter('repl','Репликация','',40, false,
+			array[['ms','Master-Slave'],['p2p','Peer-to-Peer'],['other','Другая'],['no','Нет']]);
    execute boolean_filter('ttl','Удаление устаревших записей','',5);
 
-   execute select_filter('lic','Лицензия','',6, false,
-			array[['comm','Коммерческая'],['free','Свободная'],['edu','Образовательная'],['other','Другая']]); 
+   execute select_filter('lic','Лицензия','',60, false,
+			array[['comm','Коммерческая'],['apache','Apache'],['agpl','AGPL'],['gpl2','GPLv2'],['otherfree','Свободная'],['edu','Образовательная'],['other','Другая']]);
    	
-   execute select_filter('idgen','Генерация id','',7, false,
-			array[['seq','Последоватльности'],['autoinc','Автоинкрементное поле'],['uuid','UUID'],['other','Другая']]); 
-   execute select_filter('sort','Сортировка','',8, false,
-			array[['any','По любому полю'],['idx','Только по индексу'],['id','Только по id'],['no','Невозможна']]); 
-   execute select_filter('access','Доступ','',9, false,
-			array[['net','По сети'],['bundled','Встраиваемая']]); 
+   execute select_filter('idgen','Генерация id','',70, false,
+			array[['seq','Последоватльности'],['autoinc','Автоинкрементное поле'],['uuid','UUID'],['other','Другая'],['no','Отсутствует']]);
+   execute select_filter('sort','Сортировка','',80, false,
+			array[['any','По любому полю'],['idx','Только по индексу'],['id','Только по id'],['no','Невозможна']]);
+   execute select_filter('access','Доступ','',90, false,
+			array[['net','По сети'],['builtin','Встраиваемая в приложение']]);
+   execute select_filter('codelang','Исполняемый код СУБД','',100, false,
+			array[['native','Нативный код'],['java','Java'],['erlang','Erlang']]);
    	
 END;
 $$;
