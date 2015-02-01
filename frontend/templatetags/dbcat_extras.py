@@ -86,3 +86,7 @@ def setvar(parser,token):
     if not (new_val[0] == new_val[-1] and new_val[0] in ('"', "'")):
         raise template.TemplateSyntaxError("%r tag's argument should be in quotes" % tag_name)
     return SetVarNode(new_val[1:-1], var_name)
+
+@register.inclusion_tag(name="help", file_name="tags/help_tag.html")
+def help_tag(msg):
+    return {'msg':msg}
