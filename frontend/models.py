@@ -199,7 +199,7 @@ class Db(models.Model):
                ' ) db' \
                ' GROUP BY %(fields)s' \
                ' %(all_filters_ok)s' \
-               ' ORDER BY sum(rank) DESC' \
+               ' ORDER BY sum(rank) DESC, name ASC' \
                % (locals())
 
     @classmethod
