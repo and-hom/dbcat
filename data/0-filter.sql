@@ -65,7 +65,7 @@ BEGIN
    execute boolean_filter('ttl','Удаление устаревших записей','',5);
 
    execute select_filter('lic','Лицензия','',60, false,
-			array[['comm','Коммерческая'],['apache','Apache'],['agpl','AGPL'],['gpl2','GPLv2'],['otherfree','Свободная'],['edu','Образовательная'],['other','Другая']]);
+			array[['comm','Коммерческая'],['apache2','Apache 2'],['agpl','AGPL'],['gpl2','GPLv2'],['otherfree','Другая cвободная'],['edu','Образовательная'],['other','Другая']]);
    	
    execute select_filter('idgen','Генерация id','',70, false,
 			array[['seq','Последоватльности'],['autoinc','Автоинкрементное поле'],['uuid','UUID'],['other','Другая'],['no','Отсутствует']]);
