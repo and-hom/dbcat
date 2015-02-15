@@ -14,13 +14,24 @@ END;
 $$
  LANGUAGE plpgsql; 
 
+
 CREATE OR REPLACE FUNCTION db_param_simple(db_id integer,code character varying(16), val integer) RETURNS VOID
 AS $$
 DECLARE
    p_id integer;
-BEGIN	
+BEGIN
+    execute db_param_simple_c(db_id,code,val,null);
+END;
+$$
+ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION db_param_simple_c(db_id integer,code character varying(16), val integer, comment_ character varying) RETURNS VOID
+AS $$
+DECLARE
+   p_id integer;
+BEGIN
 	INSERT INTO frontend_dbparam(db_id,filter_id) VALUES(db_id,code) RETURNING id INTO p_id;
-	INSERT INTO frontend_simpledbparam(dbparam_ptr_id,value) VALUES (p_id,val);
+	INSERT INTO frontend_simpledbparam(dbparam_ptr_id,value, comment) VALUES (p_id,val,comment_);
 END;
 $$
  LANGUAGE plpgsql; 
@@ -76,6 +87,26 @@ DECLARE
 	db_id integer;
 	p_id integer;
 BEGIN
+
+--   Cassandra
+	select db('Apache Cassandra','Распределённая СУБД, написанная на Java и рассчитанная на создание высокомасштабируемых и надёжных хранилищ огромных массивов данных.',
+	'Изначально созданный в Facebook проект был передан в Apache.',
+'https://cassandra.apache.org/') into db_id;
+
+	execute db_param_select_opt(db_id,'paradigm','col',100);
+	execute db_param_select_opt(db_id,'atomic','cas',100);
+
+	execute db_param_simple(db_id,'shard',100);
+	execute db_param_select_opt(db_id,'repl','p2p',100);
+	execute db_param_simple(db_id,'ttl',100);
+
+	execute db_param_select_opt(db_id,'lic','apache2',100);
+
+	execute db_param_select_opt(db_id,'idgen','uuid',100);
+	execute db_param_select_opt(db_id,'sort','idx',100);
+	execute db_param_select_opt(db_id,'codelang','java',100);
+	execute db_param_select_opt(db_id,'access','net',100);
+
 
 --   Derby
 	select db('Apache Derby','Реляционная СУБД, написанная на Java, предназначенная для встраивания в Java-приложения или обработки транзакций в реальном времени.','',
@@ -216,6 +247,23 @@ MySQL является решением для малых и средних пр
 	execute db_param_select_opt(db_id,'access','net',100);
 
 
+--    riak
+	select db('Riak','Свободная noSQL субд','',
+'http://basho.com/riak/') into db_id;
+
+	execute db_param_select_opt(db_id,'paradigm','keyval',100);
+	execute db_param_select_opt(db_id,'atomic','cas',100);
+
+	execute db_param_simple_c(db_id,'shard',100,'Кол-во нод, на которые тиражируется каждая запись, можно выбрать при настройке. По-умолчанию 3.');
+	execute db_param_select_opt(db_id,'repl','p2p',100);
+	execute db_param_simple(db_id,'ttl',100);
+
+	execute db_param_select_opt(db_id,'lic','apache2',100);
+
+	execute db_param_select_opt(db_id,'idgen','uuid',100);
+	execute db_param_select_opt(db_id,'sort','idx',100);
+	execute db_param_select_opt(db_id,'codelang','erlang',100);
+	execute db_param_select_opt(db_id,'access','net',100);
 
 --   SQLite
 	select db('SQLite','Свободная компактная встраиваемая реляционная база данных','',
