@@ -161,3 +161,8 @@ def formset(form_type, prefix, filters, post=None):
         subform.after_filter_set()
     return _formset
 
+
+def about(request):
+    return render_to_response('about.html')
+
+
