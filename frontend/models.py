@@ -228,7 +228,7 @@ class DbParam(models.Model):
 
 class SimpleDbParam(DbParam):
     value = models.IntegerField(null=False)
-    comment = models.TextField(null=False, blank=False, max_length=512)
+    comment = models.TextField(null=True, blank=True, max_length=512)
 
 
 class SelectDbParam(DbParam):
@@ -241,7 +241,7 @@ class SelectDbParamOption(models.Model):
     param = models.ForeignKey(SelectDbParam, null=False)
     option = models.ForeignKey(SelectOption, null=False)
     value = models.IntegerField(null=False)
-    comment = models.TextField(null=False, blank=False, max_length=512)
+    comment = models.TextField(null=True, blank=True, max_length=512)
 
 
 class DbUsefullLink(models.Model):
