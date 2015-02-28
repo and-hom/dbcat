@@ -1,0 +1,16 @@
+{% load dbcat_extras %}
+{% block filter_content %}
+<ul style="margin-left:0px;">
+    {% for option in filter.selectoption_set.all %}
+    <li style="list-style-type: none;">
+        {% if filter.code|request_get_params:request|contains:option.code %}
+            <input type="checkbox" id="{{filter.code}}_{{option.code}}" name="{{filter.code}}" value="{{option.code}}"
+                    checked="checked"/>
+        {% else %}
+            <input type="checkbox" id="{{filter.code}}_{{option.code}}" name="{{filter.code}}" value="{{option.code}}"/>
+        {% endif %}
+        <label for="{{filter.code}}_{{option.code}}" style="font-size:8pt;display:inline;">{{option.name}}</label>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

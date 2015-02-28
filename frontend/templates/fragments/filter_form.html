@@ -1,0 +1,12 @@
+{% load dbcat_extras %}
+<div class="well">
+    <form action="/" method="get" class="form-horizontal" id="filter-form">
+        <fieldset>
+            {% for filter in filters %}
+            {% include filter|template_name %}
+            {% endfor %}
+            <button type="submit" name="filter" class="btn btn-default">Filter</button>
+            <button type="reset" name="reset" class="btn">Reset</button>
+        </fieldset>
+    </form>
+</div>

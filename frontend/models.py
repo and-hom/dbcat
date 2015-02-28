@@ -97,6 +97,7 @@ class BooleanFilter(Filter):
 
 class SelectFilter(Filter):
     required = models.BooleanField(default=False)
+    multichoice = models.BooleanField(default=False, null=False)
 
     def opts(self):
         return SelectOption.objects.filter(filter=self)
@@ -134,7 +135,7 @@ class SelectFilter(Filter):
 
     def get_selected_opts(self,get):
         selected_opt_ids=[]
-        selected = get.get(self.code)
+        selected = get.getlist(self.code)
         for option in self.selectoption_set.all().iterator():
             if selected and option.code in selected:
                 selected_opt_ids.append(str(option.id))
@@ -156,6 +157,10 @@ class Db(models.Model):
     @property
     def sorted_param_set(self):
         return DbParam.objects.select_subclasses().filter(db_id=self.id).order_by('filter__priority', 'filter__code')
+
+    @property
+    def usefull_links(self):
+        return DbUsefullLink.objects.filter(db_id=self.id).order_by('short_description')
 
     @classmethod
     def find_by_filters(cls, request):
@@ -195,7 +200,7 @@ class Db(models.Model):
                ' ) db' \
                ' GROUP BY %(fields)s' \
                ' %(all_filters_ok)s' \
-               ' ORDER BY sum(rank) DESC' \
+               ' ORDER BY sum(rank) DESC, name ASC' \
                % (locals())
 
     @classmethod
@@ -224,7 +229,7 @@ class DbParam(models.Model):
 
 class SimpleDbParam(DbParam):
     value = models.IntegerField(null=False)
-    comment = models.TextField(null=False, blank=False, max_length=512)
+    comment = models.TextField(null=True, blank=True, max_length=512)
 
 
 class SelectDbParam(DbParam):
@@ -237,4 +242,11 @@ class SelectDbParamOption(models.Model):
     param = models.ForeignKey(SelectDbParam, null=False)
     option = models.ForeignKey(SelectOption, null=False)
     value = models.IntegerField(null=False)
-    comment = models.TextField(null=False, blank=False, max_length=512)
+    comment = models.TextField(null=True, blank=True, max_length=512)
+
+
+class DbUsefullLink(models.Model):
+    db = models.ForeignKey(Db, null=False)
+    short_description = models.CharField(null=False, blank=False, max_length=128)
+    link = models.URLField()
+

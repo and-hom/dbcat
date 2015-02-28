@@ -1,20 +1,8 @@
 {% extends "filters/filter_layout.html" %}
-{% load dbcat_extras %}
 {% block filter_content %}
-<select id="{{filter.code}}" name="{{filter.code}}" style="width:100%">
-    {% if not filter.required %}
-        {% if filter.code|request_get_param:request %}
-            <option></option>
+        {% if filter.multichoice %}
+            {% include 'filters/select_filter_multpile_choice.html' %}
         {% else %}
-            <option selected="selected"></option>
+            {% include 'filters/select_filter_single_choice.html' %}
         {% endif %}
-    {% endif %}
-    {% for option in filter.selectoption_set.all %}
-        {% ifequal filter.code|request_get_param:request option.code %}
-            <option value="{{option.code}}" selected="selected">{{option.name}}</option>
-        {% else %}
-            <option value="{{option.code}}">{{option.name}}</option>
-        {% endifequal %}
-    {% endfor %}
-</select>
 {% endblock %}
