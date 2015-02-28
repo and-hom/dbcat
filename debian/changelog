@@ -1,3 +1,20 @@
+dbcat (1.5) UNRELEASED; urgency=medium
+
+  * Version switched 1.4 -> 1.5 for hotfix
+  * Fix #17 Nginx resource caching
+  * Fix #22 Usefull links for DB
+  * Fix #32 Sort by name when items have equal rank
+  * Fix #33 Feedback form (http://copiny.com/) in modal window
+  * Fix #34 About page
+  * Create migration script
+  * Refs #27 Nullable comment field
+  * Filter ordering fixed
+  * Refs #2 Multichoice select filters
+  * Fix #35 Reset button fixed. Now clears form completely.
+  * Fixed scripts for release and hotfix finishing: git-dch call fixed
+
+ -- Андрей Хомяков <and.hom@gmail.com>  Sun, 01 Mar 2015 01:29:20 +0300
+
 dbcat (1.4) release; urgency=medium
 
   * Force use django 1.6.x because of 1.7.0 and greater is not supported by South

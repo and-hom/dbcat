@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-git-dch --git-author --ignore-branch --commit -N `cat version`
+git-dch --git-author --ignore-branch --commit -N `cat version` --debian-tag '%(version)s'
 
 git flow hotfix finish
 git checkout master

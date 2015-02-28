@@ -2,6 +2,8 @@
 <html>
 <head>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/basic.css">
+    <link rel="stylesheet" href="/static/css/basic_ie.css">
     <link rel="stylesheet" href="/static/css/dbcat.css">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,13 +15,52 @@
 <div class="navbar">
     <div class="navbar-inner">
         <a class="brand" href="/">DbCat</a>
+        <ul class="nav">
+            <li class=".pull-right"><a href="#" class="basic">Обратная связь</a></li>
+            <li class=".pull-right"><a href="/about">О проекте</a></li>
+        </ul>
     </div>
 </div>
 {% block content %} {% endblock %}
+
+
+
+<div id="feedback-form" style="display:none;">
+    <script type="text/javascript" charset="utf-8">
+        var proto = (document.location.protocol=='https:')?'https:':'http:';
+        var host = proto+'//widget.copiny.com';
+        document.write(unescape("%3Cdiv id='widgetbody'%3E%3Cscript src='" + host + "/static/js/newbuiltwidget.js' type='text/javascript'%3E%3C/script%3E%3C/div%3E"));
+
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        var copinyWidgetOptions = {
+            type: 'idea',
+            community:10712
+        };
+        initCopinyNewBuiltWidget(copinyWidgetOptions);
+        CopinyNewBuiltWidget.showTab();
+        $('.c-search-box').css('background-color','#f5f5f5')
+    </script>
+</div>
+
 <script src="/static/js/jquery-2.1.1.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/readmore.min.js"></script>
+<script src="/static/js/jquery.simplemodal.1.4.4.min.js"></script>
 <script src="/static/js/help_tag.js"></script>
+
+<script>
+	$('.basic').click(function (e) {
+        $('#feedback-form').modal({
+            overlayClose:true,
+            focus:true,
+            minHeight:390,
+            minWidth:300
+        })
+        return false;
+    });
+</script>
 {% block script %} {% endblock %}
+</div>
 </body>
 </html>

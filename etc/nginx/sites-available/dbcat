@@ -13,5 +13,10 @@ server {
     }
     location /static/ {
         alias /usr/share/dbcat/frontend/static/;
+        access_log off;
+        expires 1m;
+        proxy_cache static_cache;
+        proxy_cache_key "$request_uri";
+        proxy_cache_valid 1m;
     }
 }

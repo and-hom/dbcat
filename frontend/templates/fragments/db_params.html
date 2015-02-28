@@ -1,0 +1,12 @@
+{% load dbcat_extras %}
+<dl class="dl-horizontal">
+    {% for param in db.sorted_param_set %}
+    <dt style="width:250px;">
+        {{ param.filter.name }}
+    </dt>
+    <dd style="margin-left:270px;">
+        {% include param.filter.code|template_name_value %}
+    </dd>
+    {{ p2 }}
+    {% endfor %}
+</dl>
