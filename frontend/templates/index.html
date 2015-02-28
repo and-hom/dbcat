@@ -33,6 +33,14 @@
                 lessLink: '<a href="#">Collapse</a>',
                 embedCSS: false
             });
+            $('button[type=reset]').bind('click',function(){
+                $('#filter-form :input').not(':button, :submit, :reset, :hidden')
+                        .val('').removeAttr('checked');
+                $('#filter-form :input option').removeAttr('selected');
+                // remove query string from url
+                urlPath = window.location.href.split('?')[0];
+                window.history.pushState("","", urlPath);
+            });
         });
     </script>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% load dbcat_extras %}
 <div class="well">
-    <form action="/" method="get" class="form-horizontal">
+    <form action="/" method="get" class="form-horizontal" id="filter-form">
         <fieldset>
             {% for filter in filters %}
             {% include filter|template_name %}
