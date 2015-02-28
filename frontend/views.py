@@ -14,7 +14,7 @@ from frontend.models import Filter, SelectFilter, Db
 def index(request):
     return render_to_response('index.html',
                               context_instance=RequestContext(request, {
-                                  "filters": Filter.objects.select_subclasses(),
+                                  "filters": Filter.objects.order_by('priority').select_subclasses(),
                                   "search_result": Db.find_by_filters(request)
                               }))
 
