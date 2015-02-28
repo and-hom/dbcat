@@ -1,2 +1,2 @@
 #!/bin/sh
-./manage.py schemamigration frontend --auto
+python3 ./manage.py schemamigration frontend --auto

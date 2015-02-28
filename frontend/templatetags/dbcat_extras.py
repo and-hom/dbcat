@@ -37,6 +37,14 @@ def request_get_param(name, req):
     return req.GET.get(name)
 
 @register.filter
+def request_get_params(name, req):
+    return req.GET.getlist(name)
+
+@register.filter
+def contains(list, value):
+    return value in list
+
+@register.filter
 def get_field_val(form, name):
     return form[name].value()
 

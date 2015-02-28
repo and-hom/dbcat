@@ -97,6 +97,7 @@ class BooleanFilter(Filter):
 
 class SelectFilter(Filter):
     required = models.BooleanField(default=False)
+    multichoice = models.BooleanField(default=False, null=False)
 
     def opts(self):
         return SelectOption.objects.filter(filter=self)
@@ -134,7 +135,7 @@ class SelectFilter(Filter):
 
     def get_selected_opts(self,get):
         selected_opt_ids=[]
-        selected = get.get(self.code)
+        selected = get.getlist(self.code)
         for option in self.selectoption_set.all().iterator():
             if selected and option.code in selected:
                 selected_opt_ids.append(str(option.id))
