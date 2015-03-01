@@ -97,6 +97,7 @@ BEGIN
 	execute db_param_select_opt(db_id,'atomic','cas',100);
 
 	execute db_param_simple(db_id,'shard',100);
+	execute db_param_simple(db_id,'dc',100);
 	execute db_param_select_opt(db_id,'repl','p2p',100);
 	execute db_param_simple(db_id,'ttl',100);
 
@@ -255,6 +256,7 @@ MySQL является решением для малых и средних пр
 	execute db_param_select_opt(db_id,'atomic','cas',100);
 
 	execute db_param_simple_c(db_id,'shard',100,'Кол-во нод, на которые тиражируется каждая запись, можно выбрать при настройке. По-умолчанию 3.');
+	execute db_param_simple(db_id,'dc',100);
 	execute db_param_select_opt(db_id,'repl','p2p',100);
 	execute db_param_simple(db_id,'ttl',100);
 

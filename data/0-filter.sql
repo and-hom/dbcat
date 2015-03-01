@@ -61,6 +61,7 @@ BEGIN
 			array[['block','Блокировки'],['ver','Версии']]);
 			
    execute boolean_filter('shard','Шардирование','',30);
+   execute boolean_filter('dc','Поддержка неск. ДЦ','',35);
    execute select_filter('repl','Репликация','',40, false, false,
 			array[['ms','Master-Slave'],['p2p','Peer-to-Peer'],['other','Другая'],['no','Нет']]);
    execute boolean_filter('ttl','Удаление устаревших записей','',5);
