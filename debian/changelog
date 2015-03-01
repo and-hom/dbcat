@@ -1,4 +1,4 @@
-dbcat (1.5) UNRELEASED; urgency=medium
+dbcat (1.7) UNRELEASED; urgency=medium
 
   * Version switched 1.4 -> 1.5 for hotfix
   * Fix #17 Nginx resource caching
@@ -12,8 +12,16 @@ dbcat (1.5) UNRELEASED; urgency=medium
   * Refs #2 Multichoice select filters
   * Fix #35 Reset button fixed. Now clears form completely.
   * Fixed scripts for release and hotfix finishing: git-dch call fixed
+  * Version switched 1.5 -> 1.6 for hotfix
+  * Fix #37 Do not merge version from release/hotfix to develop
+  * Version switched 1.6 -> 1.7 for hotfix
+  * Refs #17 Nginx cache directory added
+  * Answer "Y" for all dpkg questions
+  * User and db creation sql script
+  * create_migration scriprt moved to scripts dir
+  * Readme changes
 
- -- Андрей Хомяков <and.hom@gmail.com>  Sun, 01 Mar 2015 01:29:20 +0300
+ -- Андрей Хомяков <and-hom@yandex-team.ru>  Mon, 02 Mar 2015 00:51:35 +0300
 
 dbcat (1.4) release; urgency=medium
 

@@ -5,6 +5,6 @@
 
 ./deb
 
-sudo dpkg -i $DEB_NAME
+yes | sudo dpkg -i $DEB_NAME
 
 dbcat-migrate-db

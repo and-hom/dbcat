@@ -1,6 +1,7 @@
 upstream dbcat {
     server unix:/tmp/dbcat.sock;
 }
+proxy_cache_path /var/cache/nginx/dbcat levels=1:2 keys_zone=static_cache:128m;
 
 server {
     listen 80;

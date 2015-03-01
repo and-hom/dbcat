@@ -3,3 +3,6 @@ Packages required to build:
 If you do not want to merge "version" file every time on release/hotfix finish, add his section in your .git/config:
 [merge "app_version"]
 	driver = ./scripts/merge_ver.sh
+
+Use "python3 manage.py syncdb --migrate" on empty database for first initialization of south
+
