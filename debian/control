@@ -1,4 +1,5 @@
 Package: dbcat
+Source: dbcat
 Version: #VERSION#
 Section: misc
 Priority: optional

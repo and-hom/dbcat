@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+. ./build_conf
+
+dupload --to common $BASE_DIR/$CHANGES_NAME

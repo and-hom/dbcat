@@ -2,6 +2,7 @@
 *.pyc
 *.log
 *.deb
+*.changes
 __pycache__
 *.sqlite3
 build/*
@@ -9,3 +10,4 @@ build/*
 1.sql
 *.tar
 build_num
+generated_packages

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+BASE_DIR=`readlink -f $(dirname $0)`
+BUILD_DIR=$BASE_DIR/build
+
+APP_NAME=dbcat
+
+cd $BASE_DIR
+VERSION=`cat $BASE_DIR/version``test -f $BASE_DIR/build_num && (echo -n '-';cat $BASE_DIR/build_num) || echo -n`
+VERSION=`echo $VERSION | sed 's/ *$//'`
+echo Build $VERSION
+
+DEB_NAME=${APP_NAME}_${VERSION}_all.deb
+CHANGES_NAME=${APP_NAME}_${VERSION}_all.changes
+
+SECTION=`grep 'Section:' $BASE_DIR/debian/control | cut -f 2 -d ' '`
+PRIORITY=`grep 'Priority:' $BASE_DIR/debian/control | cut -f 2 -d ' '`
+
+echo $DEB_NAME

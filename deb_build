@@ -1,0 +1,80 @@
+#!/bin/sh -e
+
+. ./build_conf
+
+echo Cleaning
+rm -rf $BUILD_DIR
+rm -f *.changes
+rm -f *.deb
+
+echo Create pkg structure
+mkdir -p $BUILD_DIR/usr/share/$APP_NAME
+mkdir -p $BUILD_DIR/usr/share/doc/$APP_NAME
+
+echo Copying files
+cp -r $BASE_DIR/debian $BUILD_DIR/DEBIAN
+cp -r $BASE_DIR/etc $BUILD_DIR/
+cp -r $BASE_DIR/usr $BUILD_DIR/
+cp -r $BASE_DIR/dbcat $BUILD_DIR/usr/share/$APP_NAME/
+cp -r $BASE_DIR/frontend $BUILD_DIR/usr/share/$APP_NAME/
+cp -r $BASE_DIR/manage.py $BUILD_DIR/usr/share/$APP_NAME/
+
+mv $BUILD_DIR/DEBIAN/changelog $BUILD_DIR/usr/share/doc/$APP_NAME/changelog.Debian
+gzip -9 $BUILD_DIR/usr/share/doc/$APP_NAME/changelog.Debian
+mv $BUILD_DIR/DEBIAN/copyright $BUILD_DIR/usr/share/doc/$APP_NAME/
+sed -i 's/#VERSION#/'$VERSION'/g' $BUILD_DIR/DEBIAN/control
+find $BUILD_DIR/usr -name __pycache__ -prune -exec rm -rf {} \;
+find $BUILD_DIR/usr -name \*.pyc -prune -exec rm -rf {} \;
+
+echo Create version entry
+echo -n $VERSION > $BUILD_DIR/usr/share/$APP_NAME/frontend/templates/version
+
+echo Chmod
+chmod 755 $(find $BUILD_DIR/DEBIAN -type d)
+chmod 644 $BUILD_DIR/DEBIAN/control
+chmod 644 $BUILD_DIR/DEBIAN/conffiles
+chmod -f 755 $BUILD_DIR/DEBIAN/preinst || echo "No preinst script"
+chmod -f 755 $BUILD_DIR/DEBIAN/postinst || echo "No postinst script"
+chmod -f 755 $BUILD_DIR/DEBIAN/prerm || echo "No prerm script"
+chmod -f 755 $BUILD_DIR/DEBIAN/postrm || echo "No postrm script"
+
+chmod 755 $(find $BUILD_DIR/etc -type d)
+chmod 644 $(find $BUILD_DIR/etc -type f)
+
+chmod 755 $(find $BUILD_DIR/usr -type d)
+chmod 644 $(find $BUILD_DIR/usr -type f)
+chmod 755 $(find $BUILD_DIR/etc/init.d -type f)
+
+for bin_dir in `find $BUILD_DIR/usr/ -name bin -type d`
+do
+    chmod 755 $(find $bin_dir -type f)
+done
+
+echo Gzip man pages
+gzip -9 $BUILD_DIR/usr/share/man/man1/*
+
+echo Building deb
+fakeroot dpkg-deb --build $BUILD_DIR
+mv $BASE_DIR/build.deb $BASE_DIR/$DEB_NAME
+
+echo Lintinan
+lintian $BASE_DIR/$DEB_NAME
+
+echo Changes
+echo "$DEB_NAME $SECTION $PRIORITY" > $BASE_DIR/generated_packages
+cd $BUILD_DIR
+dpkg-genchanges -b -cDEBIAN/control -l$BASE_DIR/debian/changelog -f$BASE_DIR/generated_packages > $BASE_DIR/$CHANGES_NAME
+cd $BASE_DIR
+
+if [ -n "$KEY" ]
+then
+	echo Sign
+	debsign -k$KEY $BASE_DIR/$CHANGES_NAME
+else
+	echo "Please define KEY variable and run build again. Now unsigned package will be generated."
+fi
+
+echo Done
+
+
+
