@@ -1,2 +1,3 @@
 /etc/init.d/dbcat
 /etc/nginx/sites-available/dbcat
+/etc/nginx/conf.d/dbcat-cache.conf.sample

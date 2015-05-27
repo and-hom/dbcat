@@ -1,8 +1,8 @@
-dbcat (1.7) UNRELEASED; urgency=medium
+dbcat (1.8) UNRELEASED; urgency=medium
 
   * Version switched 1.4 -> 1.5 for hotfix
   * Fix #17 Nginx resource caching
-  * Fix #22 Usefull links for DB
+  * Fix #22 Useful links for DB
   * Fix #32 Sort by name when items have equal rank
   * Fix #33 Feedback form (http://copiny.com/) in modal window
   * Fix #34 About page
@@ -20,8 +20,10 @@ dbcat (1.7) UNRELEASED; urgency=medium
   * User and db creation sql script
   * create_migration scriprt moved to scripts dir
   * Readme changes
+  * Version switched 1.7 -> 1.8 for hotfix
+  * Refs #14 Сборка changes-файла, подписывание и выкладка пакета
 
- -- Андрей Хомяков <and-hom@yandex-team.ru>  Mon, 02 Mar 2015 00:51:35 +0300
+ -- Андрей Хомяков <and-hom@yandex-team.ru>  Wed, 27 May 2015 17:18:59 +0300
 
 dbcat (1.4) release; urgency=medium
 
